@@ -7,13 +7,28 @@
     android:layout_height="match_parent"
     tools:context=".Activities.MainActivity">
 
+    <Button
+            android:text="Get Location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button2" android:layout_marginTop="28dp"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"/>
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+            android:text="Latitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView3" android:layout_marginTop="88dp"
+            app:layout_constraintTop_toBottomOf="@+id/button2" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="72dp" android:textStyle="bold"
+            android:textColor="@android:color/holo_red_dark" android:textSize="24sp"/>
+    <TextView
+            android:text="Longitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView4" android:layout_marginTop="88dp"
+            app:layout_constraintTop_toBottomOf="@+id/button2" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp" app:layout_constraintStart_toEndOf="@+id/textView3"
+            android:layout_marginStart="8dp" app:layout_constraintHorizontal_bias="0.505" android:textStyle="bold"
+            android:textAlignment="center" android:textColor="@android:color/holo_red_dark" android:textSize="24sp"/>
 </android.support.constraint.ConstraintLayout>
