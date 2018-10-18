@@ -12,21 +12,21 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-//    @SuppressLint("MissingPermission")
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_main)
-//        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-//
-//        button2.setOnClickListener({
-//            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-//                if(location!=null){
-//                    this.textView.text= location.longitude.toString()
-//                }
-//                else{
-//                    this.textView.text="nope"
-//                }
-//            }
-//        })
-    //}
+    @SuppressLint("MissingPermission")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        button2.setOnClickListener {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                if(location!=null){
+                    this.textView4.text= location.longitude.toString()
+                    this.textView3.text = location.latitude.toString()
+                } else{
+                    this.textView4.text = "Could not get location"
+                }
+            }
+        }
+    }
 }
