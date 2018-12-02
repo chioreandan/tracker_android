@@ -73,7 +73,6 @@ class MainActivity : AppCompatActivity() {
         button2.isEnabled = true
         button2.alpha = 1F
         button2.setOnClickListener { getLocation()}
-        Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show()
     }
     @SuppressLint("MissingPermission")
     private fun getLocation() {
@@ -90,8 +89,6 @@ class MainActivity : AppCompatActivity() {
                             locationGps = location
                             textView4.append("\n" + locationNetwork!!.latitude )
                             textView3.append("\n" + locationNetwork!!.longitude )
-//                            textView4.text = locationGps!!.latitude.toString()
-//                            textView3.text = locationGps!!.longitude.toString()
                         }
                     }
 
@@ -151,14 +148,10 @@ class MainActivity : AppCompatActivity() {
                     tv_result.append("\nNetwork ")
                     tv_result.append("\nLatitude : " + locationNetwork!!.latitude)
                     tv_result.append("\nLongitude : " + locationNetwork!!.longitude)
-                    Log.d("CodeAndroidLocation", " Network Latitude : " + locationNetwork!!.latitude)
-                    Log.d("CodeAndroidLocation", " Network Longitude : " + locationNetwork!!.longitude)
                 }else{
                     tv_result.append("\nGPS ")
                     tv_result.append("\nLatitude : " + locationGps!!.latitude)
                     tv_result.append("\nLongitude : " + locationGps!!.longitude)
-                    Log.d("CodeAndroidLocation", " GPS Latitude : " + locationGps!!.latitude)
-                    Log.d("CodeAndroidLocation", " GPS Longitude : " + locationGps!!.longitude)
                 }
             }
 
