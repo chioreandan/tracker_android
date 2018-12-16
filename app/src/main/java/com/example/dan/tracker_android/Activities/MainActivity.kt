@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Build
@@ -13,13 +12,20 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.View
 import android.widget.Toast
+import com.example.dan.tracker_android.Models.Location
 import com.example.dan.tracker_android.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import kotlinx.android.synthetic.main.activity_main.*
+import com.example.dan.tracker_android.Networking.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.time.LocalTime
 
 private const val PERMISSION_REQUEST = 10
 
@@ -73,6 +79,22 @@ class MainActivity : AppCompatActivity() {
         button2.isEnabled = true
         button2.alpha = 1F
         button2.setOnClickListener { getLocation()}
+        test.setOnClickListener{testApi()}
+    }
+
+    private fun testApi(){
+        var apiServices = APIClient.client.create(ApiInterface::class.java)
+        val call = apiServices.postLocation(user_email = "chiorean.dan12@gmail.com", user_token="vnWN2HsNsTW9is7TtyBB", latitude = 11.112, longitude = 12.223)
+        call.enqueue(object : Callback<Location> {
+            override fun onResponse(call: Call<Location>, response: Response<Location>) {
+
+            }
+
+            override fun onFailure(call: Call<Location>?, t: Throwable?) {
+//                Log.e(TAG, t.toString())
+            }
+        })
+
     }
     @SuppressLint("MissingPermission")
     private fun getLocation() {
@@ -84,7 +106,11 @@ class MainActivity : AppCompatActivity() {
             if (hasGps) {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0F, object :
                     LocationListener {
-                    override fun onLocationChanged(location: Location?) {
+                    override fun onLocationChanged(location: android.location.Location?) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    fun onLocationChanged(location: Location?) {
                         if (location != null) {
                             locationGps = location
                             textView4.append("\n" + locationNetwork!!.latitude )
@@ -107,13 +133,18 @@ class MainActivity : AppCompatActivity() {
                 })
 
                 val localGpsLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                if (localGpsLocation != null)
-                    locationGps = localGpsLocation
+                if (localGpsLocation != null) {
+                    this.locationGps = localGpsLocation
+                }
             }
             if (hasNetwork) {
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0F, object :
                     LocationListener {
-                    override fun onLocationChanged(location: Location?) {
+                    override fun onLocationChanged(location: android.location.Location?) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    fun onLocationChanged(location: Location?) {
                         if (location != null) {
                             locationNetwork = location
                             textView4.append("\n" + locationNetwork!!.latitude )

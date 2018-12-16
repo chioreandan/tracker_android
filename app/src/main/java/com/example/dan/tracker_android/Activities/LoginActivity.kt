@@ -108,25 +108,21 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             return
         }
 
-        // Reset errors.
         input_email.error = null
         input_password.error = null
 
-        // Store values at the time of the login attempt.
         val emailStr = input_email.text.toString()
         val passwordStr = input_password.text.toString()
 
         var cancel = false
         var focusView: View? = null
 
-        // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(passwordStr) && !isPasswordValid(passwordStr)) {
             input_password.error = getString(R.string.error_invalid_password)
             focusView = input_password
             cancel = true
         }
 
-        // Check for a valid email address.
         if (TextUtils.isEmpty(emailStr)) {
             input_email.error = getString(R.string.error_field_required)
             focusView = input_email
@@ -138,13 +134,9 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         }
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
             focusView?.requestFocus()
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-//            showProgress(true)
+            showProgress(true)
             mAuthTask = UserLoginTask(emailStr, passwordStr)
             mAuthTask!!.execute(null as Void?)
         }
@@ -165,9 +157,6 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private fun showProgress(show: Boolean) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
 
@@ -191,8 +180,6 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
                     }
                 })
         } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
             login_progress.visibility = if (show) View.VISIBLE else View.GONE
             login_form.visibility = if (show) View.GONE else View.VISIBLE
         }
@@ -201,20 +188,16 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
     override fun onCreateLoader(i: Int, bundle: Bundle?): Loader<Cursor> {
         return CursorLoader(
             this,
-            // Retrieve data rows for the device user's 'profile' contact.
             Uri.withAppendedPath(
                 ContactsContract.Profile.CONTENT_URI,
                 ContactsContract.Contacts.Data.CONTENT_DIRECTORY
             ), ProfileQuery.PROJECTION,
 
-            // Select only email addresses.
             ContactsContract.Contacts.Data.MIMETYPE + " = ?", arrayOf(
                 ContactsContract.CommonDataKinds.Email
                     .CONTENT_ITEM_TYPE
             ),
 
-            // Show primary email addresses first. Note that there won't be
-            // a primary email address if the user hasn't specified one.
             ContactsContract.Contacts.Data.IS_PRIMARY + " DESC"
         )
     }
@@ -235,7 +218,6 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
     }
 
     private fun addEmailsToAutoComplete(emailAddressCollection: List<String>) {
-        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         val adapter = ArrayAdapter(
             this@LoginActivity,
             android.R.layout.simple_dropdown_item_1line, emailAddressCollection
@@ -264,7 +246,6 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             // TODO: attempt authentication against a network service.
 
             try {
-                // Simulate network access.
                 Thread.sleep(2000)
             } catch (e: InterruptedException) {
                 return false
