@@ -7,14 +7,16 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationListener
 import android.location.LocationManager
+import android.location.Location
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import android.widget.EditText
 import android.widget.Toast
-import com.example.dan.tracker_android.Models.Location
+import com.example.dan.tracker_android.Models.Locat
 import com.example.dan.tracker_android.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
@@ -37,6 +39,9 @@ class MainActivity : AppCompatActivity() {
     private var hasNetwork = false
     private var locationGps: Location? = null
     private var locationNetwork: Location? = null
+    var userEmail=""
+    var userToken=""
+
 
     private var permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
 
@@ -52,22 +57,11 @@ class MainActivity : AppCompatActivity() {
                 requestPermissions(permissions, PERMISSION_REQUEST)
             }
         } else {
+
             enableView()
         }
 
-
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-//        button2.setOnClickListener {
-//            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-//                if (location != null) {
-//                    this.textView4.text = location.longitude.toString()
-//                    this.textView3.text = location.latitude.toString()
-//                } else {
-//                    this.textView4.text = "Could not get location"
-//                }
-//            }
-//        }
     }
 
     private fun disableView() {
@@ -76,22 +70,34 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun enableView() {
+        if (getIntent().hasExtra("user_email")){
+            userEmail = intent.getStringExtra("user_email")
+        }
+
+        if (getIntent().hasExtra("user_token")){
+            userToken = intent.getStringExtra("user_token")
+        }
+
         button2.isEnabled = true
         button2.alpha = 1F
         button2.setOnClickListener { getLocation()}
-        test.setOnClickListener{testApi()}
+
+        test.setOnClickListener{
+            postLocation(editTextLat.text.toString().toDouble(),editTextLong.text.toString().toDouble())
+        }
     }
 
-    private fun testApi(){
+    private fun postLocation(lat:Double, long:Double){
         var apiServices = APIClient.client.create(ApiInterface::class.java)
-        val call = apiServices.postLocation(user_email = "chiorean.dan12@gmail.com", user_token="vnWN2HsNsTW9is7TtyBB", latitude = 11.112, longitude = 12.223)
-        call.enqueue(object : Callback<Location> {
-            override fun onResponse(call: Call<Location>, response: Response<Location>) {
-
+        val call = apiServices.postLocation(user_email = userEmail, user_token=userToken, latitude = lat, longitude = long)
+        if (lat==null || long==null)
+            return
+        call.enqueue(object : Callback<Locat> {
+            override fun onResponse(call: Call<Locat>, response: Response<Locat>) {
+                Toast.makeText(this@MainActivity, "Location Posted", Toast.LENGTH_SHORT).show()
             }
 
-            override fun onFailure(call: Call<Location>?, t: Throwable?) {
-//                Log.e(TAG, t.toString())
+            override fun onFailure(call: Call<Locat>?, t: Throwable?) {
             }
         })
 
@@ -106,11 +112,7 @@ class MainActivity : AppCompatActivity() {
             if (hasGps) {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0F, object :
                     LocationListener {
-                    override fun onLocationChanged(location: android.location.Location?) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                    }
-
-                    fun onLocationChanged(location: Location?) {
+                    override fun onLocationChanged(location: Location?) {
                         if (location != null) {
                             locationGps = location
                             textView4.append("\n" + locationNetwork!!.latitude )
@@ -119,17 +121,13 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-
                     }
 
                     override fun onProviderEnabled(provider: String?) {
-
                     }
 
                     override fun onProviderDisabled(provider: String?) {
-
                     }
-
                 })
 
                 val localGpsLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
@@ -140,11 +138,8 @@ class MainActivity : AppCompatActivity() {
             if (hasNetwork) {
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0F, object :
                     LocationListener {
-                    override fun onLocationChanged(location: android.location.Location?) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                    }
 
-                    fun onLocationChanged(location: Location?) {
+                    override fun onLocationChanged(location: Location?) {
                         if (location != null) {
                             locationNetwork = location
                             textView4.append("\n" + locationNetwork!!.latitude )
@@ -166,7 +161,6 @@ class MainActivity : AppCompatActivity() {
                     override fun onProviderDisabled(provider: String?) {
 
                     }
-
                 })
 
                 val localNetworkLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)

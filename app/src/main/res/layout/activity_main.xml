@@ -8,6 +8,18 @@
     tools:context=".Activities.MainActivity">
 
 
+    <EditText
+            android:layout_width="409dp"
+            android:layout_height="42dp"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/editTextLong"
+            android:layout_marginBottom="44dp"
+            app:layout_constraintBottom_toTopOf="@+id/test"
+            android:textAlignment="center" android:hint="Longitude" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/editTextLat" app:layout_constraintVertical_bias="0.509"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"/>
     <Button
             android:background="@drawable/round_shape_btn"
             android:text="Get Location"
@@ -19,16 +31,16 @@
             android:fontFamily="@font/roboto_bold" android:textColor="@android:color/white"/>
     <Button
             android:background="@drawable/round_shape_btn"
-            android:text="test"
+            android:text="Post Location"
             android:layout_width="198dp"
             android:layout_height="52dp"
             android:id="@+id/test"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
             android:fontFamily="@font/roboto_bold" android:textColor="@android:color/white"
-            app:layout_constraintHorizontal_bias="0.614" android:layout_marginTop="238dp"
+            app:layout_constraintHorizontal_bias="0.426" android:layout_marginTop="224dp"
             app:layout_constraintTop_toBottomOf="@+id/textView3" android:layout_marginBottom="4dp"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.907"/>
     <TextView
             android:text="Latitude"
             android:layout_width="wrap_content"
@@ -58,5 +70,16 @@
             android:layout_marginStart="8dp" app:layout_constraintHorizontal_bias="0.0"
             android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@+id/button2"/>
+    <EditText
+            android:layout_width="409dp"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/editTextLat" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/button2" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/test" app:layout_constraintVertical_bias="0.674"
+            android:textAlignment="center" android:hint="Latitude" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp"/>
 
 </android.support.constraint.ConstraintLayout>

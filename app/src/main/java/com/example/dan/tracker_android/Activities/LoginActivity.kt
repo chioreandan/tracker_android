@@ -20,10 +20,20 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 import java.util.ArrayList
 import android.Manifest.permission.READ_CONTACTS
 import android.content.Intent
+import android.util.Log
+import android.widget.Toast
+import com.example.dan.tracker_android.Models.Locat
+import com.example.dan.tracker_android.Models.LoginResponse
+import com.example.dan.tracker_android.Models.User
+import com.example.dan.tracker_android.Networking.APIClient
+import com.example.dan.tracker_android.Networking.ApiInterface
 import com.example.dan.tracker_android.R
 
 import kotlinx.android.synthetic.main.activity_login.*
@@ -50,7 +60,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             false
         })
 
-        btn_login.setOnClickListener { openMainActivity() }
+        btn_login.setOnClickListener { attemptLogin() }
     }
 
     private fun populateAutoComplete() {
@@ -61,8 +71,10 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         loaderManager.initLoader(0, null, this)
     }
 
-    private fun openMainActivity() {
+    private fun openMainActivity(emailstr:String, tokenStr:String) {
         val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("user_email",emailstr)
+        intent.putExtra("user_token",tokenStr)
         startActivity(intent)
     }
 
@@ -137,9 +149,35 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             focusView?.requestFocus()
         } else {
             showProgress(true)
-            mAuthTask = UserLoginTask(emailStr, passwordStr)
-            mAuthTask!!.execute(null as Void?)
+//            mAuthTask = UserLoginTask(emailStr, passwordStr)
+//            mAuthTask!!.execute(null as Void?)
+//            openMainActivity()
+            login(emailStr,passwordStr);
         }
+    }
+
+    private fun login(emailStr: String, passwordStr: String): Boolean {
+        var apiServices = APIClient.client.create(ApiInterface::class.java)
+
+        val call = apiServices.loginCall(email = emailStr, password= passwordStr)
+
+        call.enqueue(object : Callback<LoginResponse> {
+            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                if (response.isSuccessful) {
+                    Log.d("RESPONSE", response.body().toString())
+                    openMainActivity(response.body()!!.email, response.body()!!.authentication_token)
+                } else {
+                    Toast.makeText(this@LoginActivity, "ERROR", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<LoginResponse>?, t: Throwable?) {
+                Toast.makeText(this@LoginActivity, "ERROR", Toast.LENGTH_SHORT).show()
+
+            }
+        })
+
+        return false;
     }
 
     private fun isEmailValid(email: String): Boolean {
